@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import './scss/styles.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
+import run from './app.js';
 
-console.log('Hello World!');
+run();
