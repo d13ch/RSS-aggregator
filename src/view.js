@@ -1,13 +1,21 @@
+/* eslint-disable no-param-reassign */
 import * as yup from 'yup';
 import onChange from 'on-change';
+import { renderErrors, renderForm } from './renders.js';
 
-export default (state, elements) => {
-  const { form, input } = elements;
-  const watchedState = onChange(state, (path, value) => {
-    if (value) {
-      input.classList.remove('is-invalid');
-    } else {
-      input.classList.add('is-invalid');
+export default (state, elements, langSet) => {
+  const { form } = elements;
+  const watchedState = onChange(state, (path) => {
+    switch (path) {
+      case 'formInput.isValid':
+        state.formInput.error = null;
+        renderErrors(state, elements, langSet);
+        break;
+      case 'formInput.error':
+        renderErrors(state, elements, langSet);
+        break;
+      default:
+        throw new Error('Oops! Check watched state');
     }
   });
 
@@ -19,11 +27,11 @@ export default (state, elements) => {
       .then(() => {
         watchedState.formInput.isValid = true;
         state.watchedRss.push(urlInput);
-        form.reset();
-        form.focus();
+        renderForm(state, elements);
       })
-      .catch(() => {
+      .catch((err) => {
         watchedState.formInput.isValid = false;
+        watchedState.formInput.error = `form.errors.${err.type}`;
       });
   });
 };

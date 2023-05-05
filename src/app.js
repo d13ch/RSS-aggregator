@@ -1,12 +1,13 @@
 import i18next from 'i18next';
 import resources from './locales/en.js';
 import view from './view.js';
-import setLanguage from './langSetter.js';
+import { renderText } from './renders.js';
 
 export default () => {
   const state = {
     formInput: {
       isValid: null,
+      error: null,
     },
     watchedRss: [],
   };
@@ -14,6 +15,11 @@ export default () => {
   const elements = {
     form: document.querySelector('.rss-form'),
     input: document.querySelector('input.form-control'),
+    header: document.querySelector('h1.main-header'),
+    label: document.querySelector('label[for="url-input"]'),
+    addBtn: document.querySelector('button[aria-label="add"]'),
+    example: document.querySelector('p.example'),
+    feedback: document.querySelector('p.feedback'),
   };
 
   const langSet = i18next.createInstance();
@@ -21,7 +27,7 @@ export default () => {
     lng: 'en',
     debug: true,
     resources,
-  }).then(() => setLanguage(langSet));
+  }).then(() => renderText(langSet, elements));
 
-  view(state, elements);
+  view(state, elements, langSet);
 };

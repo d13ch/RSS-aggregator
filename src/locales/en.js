@@ -1,11 +1,15 @@
 export default {
   en: {
     translation: {
-      body: {
+      form: {
         header: 'RSS aggregator',
-        inputLabel: 'RSS link',
+        label: 'RSS link',
         addBtn: 'Add',
         example: 'Example: https://ru.hexlet.io/lessons.rss',
+        errors: {
+          url: 'This must be a valid URL',
+          notOneOf: 'RSS already exists',
+        },
       },
     },
   },
