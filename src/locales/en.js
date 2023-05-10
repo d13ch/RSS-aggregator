@@ -9,8 +9,12 @@ export default {
         errors: {
           url: 'This must be a valid URL',
           notOneOf: 'RSS already exists',
+          parsingError: 'Sourse doesn\'t contain valid RSS',
         },
       },
+      feeds: 'Feeds',
+      posts: 'Posts',
+      postBtn: 'View',
     },
   },
 };

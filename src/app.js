@@ -9,7 +9,9 @@ export default () => {
       isValid: null,
       error: null,
     },
-    watchedRss: [],
+    urls: [],
+    feeds: [],
+    posts: [],
   };
 
   const elements = {
@@ -20,6 +22,8 @@ export default () => {
     addBtn: document.querySelector('button[aria-label="add"]'),
     example: document.querySelector('p.example'),
     feedback: document.querySelector('p.feedback'),
+    posts: document.querySelector('div.posts'),
+    feeds: document.querySelector('div.feeds'),
   };
 
   const langSet = i18next.createInstance();
