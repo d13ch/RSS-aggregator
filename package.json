@@ -1,6 +1,6 @@
 {
   "name": "my-webpack-project",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "My webpack project",
   "main": "index.js",

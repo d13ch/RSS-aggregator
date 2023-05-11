@@ -6,6 +6,33 @@ import _ from 'lodash';
 import { renderFeeds, renderForm, renderPosts } from './renders.js';
 import parse from './parser.js';
 
+const makeProxyUrl = (url) => {
+  const proxyUrl = new URL('/get', 'https://allorigins.hexlet.app');
+  proxyUrl.searchParams.set('disableCache', 'true');
+  proxyUrl.searchParams.set('url', url);
+  return proxyUrl.toString();
+};
+
+const updatePosts = (state, urls) => {
+  const proxyUrls = urls.map((url) => makeProxyUrl(url));
+  const promises = proxyUrls.map((url) => axios(url)
+    .then((response) => {
+      const { feed, posts } = parse(response.data.contents);
+      const watchedPostsTitles = state.posts.map((post) => post.title);
+      const newPosts = posts.filter((post) => !watchedPostsTitles.includes(post.title));
+      if (newPosts.length) {
+        newPosts.forEach((post) => {
+          post.feedId = feed.id;
+          post.id = _.uniqueId(feed.id);
+        });
+        state.posts.push(...newPosts.reverse());
+      }
+    }));
+  Promise.all(promises).then(() => setTimeout(() => {
+    updatePosts(state, urls);
+  }, 5000));
+};
+
 export default (state, elements, langSet) => {
   const { form } = elements;
   const watchedState = onChange(state, (path) => {
@@ -27,18 +54,19 @@ export default (state, elements, langSet) => {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const urlInput = new FormData(e.target).get('url');
+    const proxyUrl = makeProxyUrl(urlInput);
     const schema = yup.string().url().notOneOf(state.urls);
     schema.validate(urlInput)
-      .then(() => axios(`https://allorigins.hexlet.app/get?disableCache=true&url=${urlInput}`))
+      .then(() => axios(proxyUrl))
       .then((response) => {
         const { feed, posts } = parse(response.data.contents);
         feed.id = _.uniqueId();
         posts.forEach((post) => {
-          post.postId = feed.id;
+          post.feedId = feed.id;
           post.id = _.uniqueId(feed.id);
         });
         watchedState.feeds.push(feed);
-        watchedState.posts.push(...posts);
+        watchedState.posts.push(...posts.reverse());
       })
       .then(() => {
         state.formInput.isValid = false;
@@ -52,4 +80,6 @@ export default (state, elements, langSet) => {
         watchedState.formInput.isValid = false;
       });
   });
+
+  updatePosts(watchedState, state.urls);
 };

@@ -59,7 +59,7 @@ const renderFeeds = (state, elements, langSet) => {
     description.textContent = feed.description;
 
     listItem.append(itemTitle, description);
-    list.append(listItem);
+    list.prepend(listItem);
   });
 };
 
@@ -76,7 +76,7 @@ const renderPosts = (state, elements, langSet) => {
     link.outerHTML = `<a href="${post.link}" class="fw-bold" data-id="${post.id}" target="_blank" rel="noopener noreferrer">${post.title}</a>`;
     button.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">${langSet.t('postBtn')}</button>`;
 
-    list.append(listItem);
+    list.prepend(listItem);
   });
 };
 
