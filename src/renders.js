@@ -2,14 +2,13 @@
 import resources from './locales/en.js';
 
 const renderText = (langSet, elements) => {
-  const availableTranslationsForm = Object.keys(resources.en.translation.form)
-    .filter((key) => key !== 'errors');
-  availableTranslationsForm.forEach((el) => {
-    elements[el].textContent = langSet.t(`form.${el}`);
-  });
-  const availableTranslationsModal = Object.keys(resources.en.translation.modal);
-  availableTranslationsModal.forEach((el) => {
-    elements[el].textContent = langSet.t(`modal.${el}`);
+  const containers = ['form', 'modal'];
+  containers.forEach((container) => {
+    const availableTranslations = Object.keys(resources.en.translation[container])
+      .filter((key) => key !== 'errors');
+    availableTranslations.forEach((el) => {
+      elements[el].textContent = langSet.t(`${container}.${el}`);
+    });
   });
 };
 
