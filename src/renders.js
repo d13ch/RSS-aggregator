@@ -1,10 +1,11 @@
 /* eslint-disable no-param-reassign */
-import resources from './locales/en.js';
+import resources from './locales/index.js';
 
 const renderText = (langSet, elements) => {
+  const currentLang = langSet.language;
   const containers = ['form', 'modal'];
   containers.forEach((container) => {
-    const availableTranslations = Object.keys(resources.en.translation[container])
+    const availableTranslations = Object.keys(resources[currentLang].translation[container])
       .filter((key) => key !== 'errors');
     availableTranslations.forEach((el) => {
       elements[el].textContent = langSet.t(`${container}.${el}`);
@@ -16,7 +17,7 @@ const renderForm = (state, elements, langSet) => {
   const { form, input, feedback } = elements;
   if (state.formInput.isValid) {
     input.classList.remove('is-invalid');
-    feedback.textContent = 'RSS loaded';
+    feedback.textContent = langSet.t('form.errors.sucsess');
     feedback.classList.remove('text-danger');
     feedback.classList.add('text-success');
     form.reset();

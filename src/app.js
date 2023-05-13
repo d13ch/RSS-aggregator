@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import resources from './locales/en.js';
+import resources from './locales/index.js';
 import view from './view.js';
 import { renderText } from './renders.js';
 
@@ -35,7 +35,7 @@ export default () => {
 
   const langSet = i18next.createInstance();
   langSet.init({
-    lng: 'en',
+    lng: 'ru',
     debug: true,
     resources,
   }).then(() => renderText(langSet, elements));
