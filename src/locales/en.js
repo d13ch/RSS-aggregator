@@ -12,6 +12,10 @@ export default {
           parsingError: 'Sourse doesn\'t contain valid RSS',
         },
       },
+      modal: {
+        readBtn: 'Read',
+        closeBtn: 'Close',
+      },
       feeds: 'Feeds',
       posts: 'Posts',
       postBtn: 'View',
