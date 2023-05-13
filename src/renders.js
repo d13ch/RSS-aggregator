@@ -1,10 +1,15 @@
 /* eslint-disable no-param-reassign */
 import resources from './locales/en.js';
 
-const renderText = (langSet, elements, typeOfContainer = 'form') => {
-  const availableTranslations = Object.keys(resources.en.translation[typeOfContainer]);
-  availableTranslations.forEach((el) => {
-    elements[el].textContent = langSet.t(`${typeOfContainer}.${el}`);
+const renderText = (langSet, elements) => {
+  const availableTranslationsForm = Object.keys(resources.en.translation.form)
+    .filter((key) => key !== 'errors');
+  availableTranslationsForm.forEach((el) => {
+    elements[el].textContent = langSet.t(`form.${el}`);
+  });
+  const availableTranslationsModal = Object.keys(resources.en.translation.modal);
+  availableTranslationsModal.forEach((el) => {
+    elements[el].textContent = langSet.t(`modal.${el}`);
   });
 };
 
@@ -44,8 +49,8 @@ const prepareContainer = (container, typeOfContainer, langSet) => {
 };
 
 const renderFeeds = (state, elements, langSet) => {
-  const { feeds } = elements;
-  const list = prepareContainer(feeds, 'feeds', langSet);
+  const { feedsContainer } = elements;
+  const list = prepareContainer(feedsContainer, 'feeds', langSet);
   state.feeds.forEach((feed) => {
     const listItem = document.createElement('li');
     listItem.classList.add('list-group-item', 'border-0', 'border-end-0');
@@ -64,8 +69,8 @@ const renderFeeds = (state, elements, langSet) => {
 };
 
 const renderPosts = (state, elements, langSet) => {
-  const { posts } = elements;
-  const list = prepareContainer(posts, 'posts', langSet);
+  const { postsContainer } = elements;
+  const list = prepareContainer(postsContainer, 'posts', langSet);
   state.posts.forEach((post) => {
     const listItem = document.createElement('li');
     listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -73,11 +78,21 @@ const renderPosts = (state, elements, langSet) => {
     const link = document.createElement('a');
     const button = document.createElement('button');
     listItem.append(link, button);
-    link.outerHTML = `<a href="${post.link}" class="fw-bold" data-id="${post.id}" target="_blank" rel="noopener noreferrer">${post.title}</a>`;
+    const linkClasses = state.uiState.viewedPosts.includes(post)
+      ? 'fw-normal link-secondary'
+      : 'fw-bold';
+    link.outerHTML = `<a href="${post.link}" class="${linkClasses}" data-id="${post.id}" target="_blank" rel="noopener noreferrer">${post.title}</a>`;
     button.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">${langSet.t('postBtn')}</button>`;
 
     list.prepend(listItem);
   });
+};
+
+const renderModal = (elements, post) => {
+  const { modalTitle, modalBody, readBtn } = elements;
+  modalTitle.textContent = post.title;
+  modalBody.textContent = post.description;
+  readBtn.href = post.link;
 };
 
 export {
@@ -85,4 +100,5 @@ export {
   renderForm,
   renderFeeds,
   renderPosts,
+  renderModal,
 };

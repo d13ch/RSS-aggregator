@@ -9,6 +9,9 @@ export default () => {
       isValid: null,
       error: null,
     },
+    uiState: {
+      viewedPosts: [],
+    },
     urls: [],
     feeds: [],
     posts: [],
@@ -22,8 +25,12 @@ export default () => {
     addBtn: document.querySelector('button[aria-label="add"]'),
     example: document.querySelector('p.example'),
     feedback: document.querySelector('p.feedback'),
-    posts: document.querySelector('div.posts'),
-    feeds: document.querySelector('div.feeds'),
+    postsContainer: document.querySelector('div.posts'),
+    feedsContainer: document.querySelector('div.feeds'),
+    modalTitle: document.querySelector('h5.modal-title'),
+    modalBody: document.querySelector('div.modal-body'),
+    readBtn: document.querySelector('div.modal-footer > a'),
+    closeBtn: document.querySelector('div.modal-footer > button'),
   };
 
   const langSet = i18next.createInstance();
