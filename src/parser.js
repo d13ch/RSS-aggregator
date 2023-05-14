@@ -4,7 +4,7 @@ export default (data) => {
   const errorNode = doc.querySelector('parsererror');
   if (errorNode) {
     const error = new Error('Resourse doesn\'t contain valid RSS');
-    error.type = 'parsingError';
+    error.name = 'parsingError';
     throw error;
   }
   const feed = {

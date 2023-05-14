@@ -58,7 +58,7 @@ export default (state, elements, langSet) => {
     e.preventDefault();
     const urlInput = new FormData(e.target).get('url');
     const proxyUrl = makeProxyUrl(urlInput);
-    const schema = yup.string().url().notOneOf(state.urls);
+    const schema = yup.string().required().url().notOneOf(state.urls);
     schema.validate(urlInput)
       .then(() => axios(proxyUrl))
       .then((response) => {
@@ -78,7 +78,15 @@ export default (state, elements, langSet) => {
         state.urls.push(urlInput);
       })
       .catch((err) => {
-        state.formInput.error = `form.errors.${err.type}`;
+        if (err.name === 'AxiosError') {
+          state.formInput.error = 'form.errors.network';
+        }
+        if (err.name === 'ValidationError') {
+          state.formInput.error = `form.errors.${err.type}`;
+        }
+        if (err.name === 'parsingError') {
+          state.formInput.error = `form.errors.${err.name}`;
+        }
         state.formInput.isValid = true;
         watchedState.formInput.isValid = false;
       });

@@ -10,6 +10,8 @@ export default {
         url: 'Ссылка должна быть валидным URL',
         notOneOf: 'RSS уже существует',
         parsingError: 'Ресурс не содержит валидный RSS',
+        required: 'Не должно быть пустым',
+        network: 'Ошибка сети',
       },
     },
     modal: {

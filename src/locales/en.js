@@ -10,6 +10,8 @@ export default {
         url: 'This must be a valid URL',
         notOneOf: 'RSS already exists',
         parsingError: 'Sourse doesn\'t contain valid RSS',
+        required: 'Shouldn\'t be empty',
+        network: 'Network error',
       },
     },
     modal: {
