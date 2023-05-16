@@ -5,7 +5,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import resources from './locales/index.js';
 import view from './view.js';
-import { renderText, renderModal } from './renders.js';
+import { renderModal } from './renders.js';
 import parse from './parser.js';
 
 const makeProxyUrl = (url) => {
@@ -88,8 +88,6 @@ export default () => {
     debug: true,
     resources,
   }).then(() => {
-    renderText(langSet, elements);
-
     const watchedState = view(state, elements, langSet);
     const { form, postsContainer } = elements;
 
