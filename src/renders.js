@@ -15,6 +15,7 @@ const renderText = (langSet, elements) => {
 
 const renderForm = (state, elements, langSet) => {
   const { form, input, feedback } = elements;
+
   if (state.formInput.isValid) {
     input.classList.remove('is-invalid');
     feedback.textContent = langSet.t('form.errors.sucsess');
@@ -26,6 +27,25 @@ const renderForm = (state, elements, langSet) => {
     input.classList.add('is-invalid');
     feedback.textContent = langSet.t(state.formInput.error);
     feedback.classList.add('text-danger');
+  }
+};
+
+const renderAddButton = (state, elements) => {
+  const { addBtn } = elements;
+  switch (state.uiState.loadingProcess) {
+    case 'loading':
+      addBtn.setAttribute('disabled', 'disabled');
+      break;
+    case 'loaded':
+      addBtn.removeAttribute('disabled');
+      // form.reset();
+      // form.focus();
+      break;
+    case 'failure':
+      addBtn.removeAttribute('disabled');
+      break;
+    default:
+      throw new Error(`Oops! Unknown loading process state: ${state.uiState.loadingProcess}`);
   }
 };
 
@@ -98,6 +118,7 @@ const renderModal = (elements, post) => {
 export {
   renderText,
   renderForm,
+  renderAddButton,
   renderFeeds,
   renderPosts,
   renderModal,
