@@ -15,7 +15,6 @@ const renderText = (langSet, elements) => {
 
 const renderForm = (state, elements, langSet) => {
   const { input, feedback } = elements;
-
   if (state.formInput.isValid) {
     input.classList.remove('is-invalid');
     feedback.textContent = langSet.t('form.errors.sucsess');
