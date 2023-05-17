@@ -5,7 +5,6 @@ import axios from 'axios';
 import _ from 'lodash';
 import resources from './locales/index.js';
 import view from './view.js';
-import { renderModal } from './renders.js';
 import parse from './parser.js';
 
 const makeProxyUrl = (url) => {
@@ -13,6 +12,11 @@ const makeProxyUrl = (url) => {
   proxyUrl.searchParams.set('disableCache', 'true');
   proxyUrl.searchParams.set('url', url);
   return proxyUrl.toString();
+};
+
+const validate = (url, state) => {
+  const schema = yup.string().required().url().notOneOf(state.feeds.map((feed) => feed.url));
+  return schema.validate(url);
 };
 
 const handleErrors = (error, state) => {
@@ -31,8 +35,8 @@ const handleErrors = (error, state) => {
   }
 };
 
-const updatePosts = (watchedState, urls) => {
-  const proxyUrls = urls.map((url) => makeProxyUrl(url));
+const updatePosts = (watchedState) => {
+  const proxyUrls = watchedState.feeds.map((feed) => makeProxyUrl(feed.url));
   const promises = proxyUrls.map((url) => axios(url)
     .then((response) => {
       const { feed, posts } = parse(response.data.contents);
@@ -40,14 +44,15 @@ const updatePosts = (watchedState, urls) => {
       const newPosts = posts.filter((post) => !watchedPostsTitles.includes(post.title));
       if (newPosts.length) {
         newPosts.forEach((post) => {
-          post.feedId = feed.id;
-          post.id = _.uniqueId(feed.id);
+          const correspondingFeed = watchedState.feeds.find(() => _.matches(feed.title));
+          post.feedId = correspondingFeed.id;
+          post.id = _.uniqueId(correspondingFeed.id);
         });
         watchedState.posts.push(...newPosts.reverse());
       }
     }));
   Promise.all(promises).then(() => setTimeout(() => {
-    updatePosts(watchedState, urls);
+    updatePosts(watchedState);
   }, 5000));
 };
 
@@ -61,7 +66,9 @@ export default () => {
     uiState: {
       viewedPosts: [],
     },
-    urls: [],
+    modal: {
+      displayedPost: null,
+    },
     feeds: [],
     posts: [],
   };
@@ -95,8 +102,8 @@ export default () => {
       e.preventDefault();
       const urlInput = new FormData(e.target).get('url');
       const proxyUrl = makeProxyUrl(urlInput);
-      const schema = yup.string().required().url().notOneOf(state.urls);
-      schema.validate(urlInput)
+
+      validate(urlInput, state)
         .then(() => {
           watchedState.loadingProcess = 'loading';
           return axios(proxyUrl);
@@ -104,24 +111,22 @@ export default () => {
         .then((response) => {
           const { feed, posts } = parse(response.data.contents);
           feed.id = _.uniqueId();
+          feed.url = urlInput;
           posts.forEach((post) => {
             post.feedId = feed.id;
             post.id = _.uniqueId(feed.id);
           });
           watchedState.feeds.push(feed);
           watchedState.posts.push(...posts.reverse());
-        })
-        .then(() => {
           watchedState.loadingProcess = 'loaded';
-          state.formInput.isValid = false;
           watchedState.formInput.isValid = true;
           state.formInput.error = null;
-          state.urls.push(urlInput);
         })
+        .then(() => updatePosts(watchedState, state.urls))
         .catch((err) => {
           handleErrors(err, state);
           watchedState.loadingProcess = 'failure';
-          state.formInput.isValid = true;
+          watchedState.formInput.isValid = true;
           watchedState.formInput.isValid = false;
         });
     });
@@ -130,10 +135,8 @@ export default () => {
       const post = state.posts.find(({ id }) => id === e.target.dataset.id);
       watchedState.uiState.viewedPosts.push(post);
       if (e.target.nodeName === 'BUTTON') {
-        renderModal(elements, post);
+        watchedState.modal.displayedPost = post;
       }
     });
-
-    updatePosts(watchedState, state.urls);
   });
 };

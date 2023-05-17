@@ -96,16 +96,22 @@ const renderPosts = (state, elements, langSet) => {
     const button = document.createElement('button');
     listItem.append(link, button);
     const linkClasses = state.uiState.viewedPosts.includes(post)
-      ? 'fw-normal link-secondary'
-      : 'fw-bold';
-    link.outerHTML = `<a href="${post.link}" class="${linkClasses}" data-id="${post.id}" target="_blank" rel="noopener noreferrer">${post.title}</a>`;
+      ? ['fw-normal', 'link-secondary']
+      : ['fw-bold'];
+    link.href = post.link;
+    link.classList.add(...linkClasses);
+    link.dataset.id = post.id;
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noopener noreferrer');
+    link.textContent = post.title;
     button.outerHTML = `<button type="button" class="btn btn-outline-primary btn-sm" data-id="${post.id}" data-bs-toggle="modal" data-bs-target="#modal">${langSet.t('postBtn')}</button>`;
 
     list.prepend(listItem);
   });
 };
 
-const renderModal = (elements, post) => {
+const renderModal = (state, elements) => {
+  const post = state.modal.displayedPost;
   const { modalTitle, modalBody, readBtn } = elements;
   modalTitle.textContent = post.title;
   modalBody.textContent = post.description;

@@ -18,6 +18,9 @@ export default (state, elements, langSet) => onChange(state, (path) => {
     case 'uiState.viewedPosts':
       render.renderPosts(state, elements, langSet);
       break;
+    case 'modal.displayedPost':
+      render.renderModal(state, elements);
+      break;
     default:
       throw new Error(`Oops! Check state: ${path}`);
   }
