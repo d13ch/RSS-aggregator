@@ -85,7 +85,7 @@ export default () => {
   const langSet = i18next.createInstance();
   langSet.init({
     lng: 'ru',
-    debug: true,
+    debug: false,
     resources,
   }).then(() => {
     const watchedState = view(state, elements, langSet);

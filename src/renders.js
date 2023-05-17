@@ -14,15 +14,13 @@ const renderText = (langSet, elements) => {
 };
 
 const renderForm = (state, elements, langSet) => {
-  const { form, input, feedback } = elements;
+  const { input, feedback } = elements;
 
   if (state.formInput.isValid) {
     input.classList.remove('is-invalid');
     feedback.textContent = langSet.t('form.errors.sucsess');
     feedback.classList.remove('text-danger');
     feedback.classList.add('text-success');
-    form.reset();
-    form.focus();
   } else {
     input.classList.add('is-invalid');
     feedback.textContent = langSet.t(state.formInput.error);
@@ -31,15 +29,15 @@ const renderForm = (state, elements, langSet) => {
 };
 
 const renderAddButton = (state, elements) => {
-  const { addBtn } = elements;
+  const { addBtn, form } = elements;
   switch (state.uiState.loadingProcess) {
     case 'loading':
       addBtn.setAttribute('disabled', 'disabled');
       break;
     case 'loaded':
       addBtn.removeAttribute('disabled');
-      // form.reset();
-      // form.focus();
+      form.reset();
+      form.focus();
       break;
     case 'failure':
       addBtn.removeAttribute('disabled');
