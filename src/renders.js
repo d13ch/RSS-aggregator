@@ -29,7 +29,7 @@ const renderForm = (state, elements, langSet) => {
 
 const renderAddButton = (state, elements) => {
   const { addBtn, form } = elements;
-  switch (state.uiState.loadingProcess) {
+  switch (state.loadingProcess) {
     case 'loading':
       addBtn.setAttribute('disabled', 'disabled');
       break;
@@ -42,7 +42,7 @@ const renderAddButton = (state, elements) => {
       addBtn.removeAttribute('disabled');
       break;
     default:
-      throw new Error(`Oops! Unknown loading process state: ${state.uiState.loadingProcess}`);
+      throw new Error(`Oops! Unknown loading process state: ${state.loadingProcess}`);
   }
 };
 

@@ -27,7 +27,7 @@ const handleErrors = (error, state) => {
       state.formInput.error = `form.errors.${error.name}`;
       break;
     default:
-      throw new Error(`Oops! Unknown error: ${error.name}`);
+      throw error;
   }
 };
 
@@ -57,8 +57,8 @@ export default () => {
       isValid: null,
       error: null,
     },
+    loadingProcess: null,
     uiState: {
-      loadingProcess: null,
       viewedPosts: [],
     },
     urls: [],
@@ -98,7 +98,7 @@ export default () => {
       const schema = yup.string().required().url().notOneOf(state.urls);
       schema.validate(urlInput)
         .then(() => {
-          watchedState.uiState.loadingProcess = 'loading';
+          watchedState.loadingProcess = 'loading';
           return axios(proxyUrl);
         })
         .then((response) => {
@@ -112,7 +112,7 @@ export default () => {
           watchedState.posts.push(...posts.reverse());
         })
         .then(() => {
-          watchedState.uiState.loadingProcess = 'loaded';
+          watchedState.loadingProcess = 'loaded';
           state.formInput.isValid = false;
           watchedState.formInput.isValid = true;
           state.formInput.error = null;
@@ -120,7 +120,7 @@ export default () => {
         })
         .catch((err) => {
           handleErrors(err, state);
-          watchedState.uiState.loadingProcess = 'failure';
+          watchedState.loadingProcess = 'failure';
           state.formInput.isValid = true;
           watchedState.formInput.isValid = false;
         });

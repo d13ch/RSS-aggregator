@@ -3,7 +3,7 @@ import * as render from './renders.js';
 
 export default (state, elements, langSet) => onChange(state, (path) => {
   switch (path) {
-    case 'uiState.loadingProcess':
+    case 'loadingProcess':
       render.renderAddButton(state, elements, langSet);
       break;
     case 'formInput.isValid':
