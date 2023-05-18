@@ -120,7 +120,7 @@ export default () => {
           watchedState.posts.push(...posts.reverse());
           watchedState.loadingProcess = 'loaded';
           watchedState.formInput.isValid = true;
-          state.formInput.error = null;
+          watchedState.formInput.error = null;
         })
         .catch((err) => {
           handleErrors(err, state);

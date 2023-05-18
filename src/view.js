@@ -22,6 +22,6 @@ export default (state, elements, langSet) => onChange(state, (path) => {
       render.renderModal(state, elements);
       break;
     default:
-      throw new Error(`Oops! Check state: ${path}`);
+      break;
   }
 });
