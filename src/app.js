@@ -122,7 +122,6 @@ export default () => {
           watchedState.formInput.isValid = true;
           state.formInput.error = null;
         })
-        .then(() => updatePosts(watchedState, state.urls))
         .catch((err) => {
           handleErrors(err, state);
           watchedState.loadingProcess = 'failure';
@@ -138,5 +137,7 @@ export default () => {
         watchedState.modal.displayedPost = post;
       }
     });
+
+    updatePosts(watchedState, state.urls);
   });
 };
